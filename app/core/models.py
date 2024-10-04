@@ -4,6 +4,9 @@ from django.contrib.auth.models import (
     PermissionsMixin
 )
 from django.db import models
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class UserManager(BaseUserManager):
@@ -37,3 +40,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
+
+
+class CommonUserAbstract(models.Model):
+    """Base abstract model for costumised users"""
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="%(class)s_user")
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    level = models.PositiveIntegerField(
+        _('user level'),
+        validators=[MinValueValidator(0), MaxValueValidator(5)]
+        )
+
+    class Meta:
+        abstract = True
