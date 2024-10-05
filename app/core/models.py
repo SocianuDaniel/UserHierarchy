@@ -57,3 +57,26 @@ class CommonUserAbstract(models.Model):
 
     class Meta:
         abstract = True
+
+
+class OwnerManager(models.Manager):
+    def create_owner(self, email, password=None, **extra_fields):
+        user = get_user_model().objects.create_user(
+            email, password, **extra_fields
+            )
+        if not user:
+            raise ValueError(_('error creating the user'))
+        print(**extra_fields)
+        level = 1
+        owner = self.model(user=user, level=level, **extra_fields)
+        owner.save(using=self._db)
+        return owner
+
+
+class Owner(CommonUserAbstract):
+    level = models.PositiveBigIntegerField(
+        _("user level"),
+        editable=False,
+        default=1
+        )
+    objects = OwnerManager()

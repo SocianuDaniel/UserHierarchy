@@ -3,6 +3,7 @@ Test for models.
 """
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from core.models import Owner
 
 
 class ModelTest(TestCase):
@@ -47,3 +48,16 @@ class ModelTest(TestCase):
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_owner(self):
+        payload = {
+                "email": "testowner@example.com",
+                "password": "pass123"
+        }
+        owner = Owner.objects.create_owner(
+            email=payload['email'],
+            password=payload['password']
+        )
+        ownerUser = get_user_model().objects.get(email=payload['email'])
+        self.assertEqual(owner.user, ownerUser)
+        self.assertEqual(owner.level, 1)
