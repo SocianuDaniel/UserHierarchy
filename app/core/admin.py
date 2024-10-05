@@ -44,9 +44,11 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
+
 class OwnewAdmin(admin.ModelAdmin):
     list_display = ('user', 'level')
     readonly_fields = ['user']
+
 
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Owner, OwnewAdmin)
