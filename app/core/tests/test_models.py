@@ -61,3 +61,15 @@ class ModelTest(TestCase):
         ownerUser = get_user_model().objects.get(email=payload['email'])
         self.assertEqual(owner.user, ownerUser)
         self.assertEqual(owner.level, 1)
+
+    def test_owner_is_not_superuser(self):
+        payload = {
+                "email": "testowner@example.com",
+                "password": "pass123"
+        }
+        owner = Owner.objects.create_owner(
+            email=payload['email'],
+            password=payload['password']
+        )
+        self.assertFalse(owner.user.is_superuser)
+        self.assertFalse(owner.user.is_staff)
