@@ -80,7 +80,7 @@ class CommonUserAbstract(models.Model):
 
 class OwnerManager(models.Manager):
     """
-    owner model
+    owner model manager
     """
 
     def create_owner(self, email, password=None, **extra_fields):
