@@ -1,7 +1,7 @@
 from django.test import TestCase
-# from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
 # from core.models import Owner
-# from core import forms
+from core import forms
 
 
 class OwnerTest(TestCase):
@@ -18,14 +18,18 @@ class OwnerTest(TestCase):
             email=payload['email'],
             password=payload['password1']
             ) """
-        response = self.client.post('owner/register/', payload)
-        # form = forms.CreateOwnerForm(data=payload)
+        form = forms.CreateOwnerForm(data=payload)
 
         self.assertFormError(
-            response,
-            'form',
-            'emai',
-            'user allready in the database')
+            form=form,
+            field='email',
+            errors='user allready in the database')
 
-    def test_un_test(self):
-        self.assertEqual(1, 2, "unu nu e egal cu doi")
+    def test_success_create_owner(self):
+        payload = {
+            'email': "test123@email.com",
+            'password1': 'pass123',
+            'password2': 'pass123'
+        }
+        form = forms.CreateOwnerForm(data=payload)
+        self.assertTrue(form.is_valid())
