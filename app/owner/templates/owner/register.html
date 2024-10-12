@@ -1,1 +1,17 @@
-register user here
+{% extends "core/base.html" %}
+
+{% block extra_style %}
+<style>
+    
+</style>
+{% endblock extra_style %}
+{% block content %}
+<form  method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock content %}
+
+
