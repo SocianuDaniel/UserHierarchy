@@ -1,5 +1,5 @@
 from django.test import TestCase
-# from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
 # from core.models import Owner
 from core import forms
 
@@ -14,10 +14,10 @@ class OwnerTest(TestCase):
             'password1': 'pass123',
             'password2': 'pass123'
         }
-        """ user = get_user_model().objects.create_user(
+        user = get_user_model().objects.create_user(
             email=payload['email'],
             password=payload['password1']
-            ) """
+            )
         form = forms.CreateOwnerForm(data=payload)
 
         self.assertFormError(
