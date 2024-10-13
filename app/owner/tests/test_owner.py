@@ -14,7 +14,7 @@ class OwnerTest(TestCase):
             'password1': 'pass123',
             'password2': 'pass123'
         }
-        user = get_user_model().objects.create_user(
+        get_user_model().objects.create_user(
             email=payload['email'],
             password=payload['password1']
             )
