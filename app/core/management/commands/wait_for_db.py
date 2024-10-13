@@ -4,7 +4,7 @@
 from typing import Any
 from django.core.management.base import BaseCommand
 import time
-from psycopg2 import OperationalError as Psycopg2OpError
+from psycopg import OperationalError as Psycopg2OpError
 from django.db.utils import OperationalError
 
 
