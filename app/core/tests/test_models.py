@@ -3,7 +3,9 @@ Test for models.
 """
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.contrib import auth
 from core.models import Owner
+from django.test import Client
 
 
 class ModelTest(TestCase):
@@ -73,3 +75,30 @@ class ModelTest(TestCase):
         )
         self.assertFalse(owner.user.is_superuser)
         self.assertFalse(owner.user.is_staff)
+
+
+class TestEmployee(TestCase):
+    """ Class for testing the employe model """
+
+    def setUp(self):
+        """ Create Owner  """
+        payload = {
+                "email": "testowner@example.com",
+                "password": "pass123"
+        }
+        self.client = Client()
+        self.owner = Owner.objects.create_owner(
+            email=payload['email'],
+            password=payload['password']
+        )
+        self.client.force_login(self.owner.user)
+
+
+    def test_employee_created_by_logged_owner(self):
+        """ test if owner is logged in """
+        user = auth.get_user(self.client)
+        self.assertTrue(user.is_authenticated)
+        self.assertEqual(user, self.owner.user)
+        
+
+        
