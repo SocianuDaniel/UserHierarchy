@@ -49,8 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
 
-def validateEqual(value):
-    if value != 1:
+def validateEqual(value, instance):
+    if value != instance.level:
 
         raise ValidationError(
             _('%(value)s must be equal to 1  '),
@@ -70,7 +70,6 @@ class CommonUserAbstract(models.Model):
     updated = models.DateTimeField(auto_now=True)
     level = models.PositiveIntegerField(
         _('user level'),
-        validators=[validateEqual],
         choices=USER_LEVELS
         )
 
@@ -107,3 +106,50 @@ class Owner(CommonUserAbstract):
             raise ValidationError(_('user must not be superuser or staff'))
         self.level = self._owner_level
         super(Owner, self).save(force_insert, force_update)
+
+
+class SupervisorManager(models.Manager):
+    """ Model for superuser """
+
+    def create_supervisor(
+            self, email, password=None,
+            owner=None,  **extra_fields):
+        user, created = get_user_model().objects.get_or_create(
+            email=email,
+            defaults={'password': password}
+            )
+        level = 2
+        supervisor = None
+        if created:
+            supervisor = self.model(
+                user=user, owner=owner,
+                level=level, **extra_fields)
+            supervisor.save()
+
+        else:
+            if user:
+                owners = Owner.objects.get(user=user)
+                if owners:
+                    raise ValueError(_('Email already used'))
+                supervisors = Supervisor.objects.get(user=user)
+                if supervisors:
+                    raise ValueError(_('Email already used'))
+
+            supervisor = self.model(user=user, level=level, **extra_fields)
+            supervisor.save()
+        return supervisor
+
+
+class Supervisor(CommonUserAbstract):
+    """Claas for Supervisor"""
+    _supervisor_level = 2
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    objects = SupervisorManager()
+
+    def save(self, force_insert=False, force_update=False):
+        if self.level != USER_LEVELS[self._supervisor_level][0]:
+            raise ValidationError('nu e bun')
+        if self.user.is_superuser or self.user.is_staff:
+            raise ValidationError(_('user must not be superuser or staff'))
+        self.level = self._supervisor_level
+        super(Supervisor, self).save(force_insert, force_update)

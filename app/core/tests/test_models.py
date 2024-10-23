@@ -4,7 +4,7 @@ Test for models.
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib import auth
-from core.models import Owner
+from core.models import Owner, Supervisor
 from django.test import Client
 
 
@@ -93,12 +93,15 @@ class TestEmployee(TestCase):
         )
         self.client.force_login(self.owner.user)
 
-
     def test_employee_created_by_logged_owner(self):
+
         """ test if owner is logged in """
+        supervisor = Supervisor.objects.create_supervisor(
+            email="newsupervisor@example.com",
+            password='password123',
+            owner=self.owner
+            )
+
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
-        self.assertEqual(user, self.owner.user)
-        
-
-        
+        self.assertEqual(supervisor.owner.user, self.owner.user)

@@ -50,6 +50,12 @@ class OwnewAdmin(admin.ModelAdmin):
     # readonly_fields = ['user']
 
 
+class SupervisorAdmin(admin.ModelAdmin):
+    list_display = ('user', 'level')
+    # readonly_fields = ['user']
+
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Owner, OwnewAdmin)
+admin.site.register(models.Supervisor, SupervisorAdmin)
 admin.site.unregister(Group)
