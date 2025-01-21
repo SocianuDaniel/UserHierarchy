@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+
+{% block extra_style %}
+<style>
+    
+</style>
+{% endblock extra_style %}
+{% block content %}
+your supervisors here
+<a href ="{% supervisor:create-user %}">+</a>
+{% endblock content %}

@@ -19,6 +19,7 @@ from django.urls import path, include
 from owner import urls as owner_urls
 
 urlpatterns = [
+    path("accounts/", include("django.contrib.auth.urls")),
     path('admin/', admin.site.urls),
     path('owner/', include(owner_urls), name='owner')
     ]

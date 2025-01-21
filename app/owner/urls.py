@@ -8,5 +8,14 @@ urlpatterns = [
     path('thanks/',
          TemplateView.as_view(
              template_name="owner/registration_complete.html"),
-         name="registration-complete")
+         name="registration-complete"),
+    
+]
+urlpatterns += [
+    path('',views.dashboard,name='dash-owner'),
+        path('dash/supervisor/create/',
+         views.supervisor_create,
+         name='supervisor-create'
+         ),
+    
 ]

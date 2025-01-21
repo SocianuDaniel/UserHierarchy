@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 # from . import models
 
 
-class CreateOwnerForm(forms.Form):
+class CreateNewUserForm(forms.Form):
     """
     Form to create a Owner
     """
@@ -23,7 +23,6 @@ class CreateOwnerForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data['email']
         user = get_user_model().objects.all().filter(email=email)
-        print(user)
         if user:
             raise ValidationError(_('user allready in the database'))
         return email
@@ -34,3 +33,5 @@ class CreateOwnerForm(forms.Form):
         pass2 = cleaned_data.get('password2')
         if pass1 != pass2:
             raise ValidationError(_('password1 in not equal with password2'))
+
+

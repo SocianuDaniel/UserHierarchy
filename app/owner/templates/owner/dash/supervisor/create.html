@@ -1,0 +1,17 @@
+create here your supervisor
+{% extends "core/base.html" %}
+
+{% block extra_style %}
+<style>
+    
+</style>
+{% endblock extra_style %}
+{% block content %}
+create supervisor
+<form  method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock content %}
